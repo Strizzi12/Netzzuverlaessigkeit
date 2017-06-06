@@ -50,7 +50,7 @@ interface FastEthernet0/24
  channel-group 1 mode active
 \end{lstlisting}
 
-Des weiteren wurden die verschiedenen \ac{VLAN}s, die auf den jeweiligen Switches hängen, eingestellt.
+Des weiteren wurden die verschiedenen \ac{VLAN}s, die auf den jeweiligen Switches hängen, konfiguriert. Im Listing 3.2 werden zwei solchen Konfigurationen dargestellt.
 
 \lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
 \begin{lstlisting}[caption={VLAN Konfiguration auf Switch 1},label={lst:etherchannel},language={}]
@@ -63,4 +63,36 @@ interface Vlan20
 \end{lstlisting}
 
 \section{Router}
+Wie im folgenden Listing 3.3 erkennbar, wurden die GigabitEthernet Interfaces (je nach \ac{VLAN}) für die Encapsulation (IEEE 802.1Q) konfiguriert. Für die jeweiligen Standby Gruppen wurden die dazugehörigen IP-Adressen angegeben. 
+Diese standby Adressen werden dazu genutzt, um das \ac{HSRP} zu nutzen und eine IP Redundanz abzudecken. Diese soll im Ausfall ("statefull failover") die Funktionalität aufrechterhalten.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={Konfiguration auf Router 1},label={lst:routerconfig},language={}]
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.5.1 255.255.255.0
+ standby 1 ip 192.168.5.10
+!
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.15.1 255.255.255.0
+ standby 2 ip 192.168.15.10
+!
+interface GigabitEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.25.1 255.255.255.0
+ standby 3 ip 192.168.25.10
+
+\end{lstlisting}
+
+Des weiteren wurde auch \ac{OSPF} genutzt (siehe Listing 3.3), um  den Routern ein schnelles dynamisches Verhalten in Bezug auf die Änderungen in der Netztopologie zu ermöglichen. Durch diese Nutzung optimiert sich das Routing hinsichtlich der Übertragungskosten und kann im Notfall daher nützlich sein.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={OSFP Einstellungen auf Router 2},label={lst:ospfsettings},language={}]
+router ospf 10
+ network 10.10.10.0 0.0.0.255 area 0
+ network 172.16.15.0 0.0.0.3 area 0
+ network 192.168.25.0 0.0.0.255 area 0
+
+\end{lstlisting}
 
