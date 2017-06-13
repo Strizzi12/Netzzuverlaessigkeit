@@ -1,0 +1,86 @@
+% !TeX root = 00General.tex
+
+\documentclass
+[
+a4paper,
+openright,                    % Kap.beginn immer rechts! (fkt. nur bei report, nicht bei article)
+12pt                          % ersatzweise 12pt, wenn mehr Seiten entstehen sollen
+]
+{report}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Dokumenteneigenschaften
+
+\newcommand{\Author}{} 
+\newcommand{\Title}{}
+\newcommand{\Keywords}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Layout zusammengestellt von Richard Wanger im WS 2015/2016. Verschiedene Vorlagen wurden bei der Erstellung
+% kombiniert und nach dem Masterleitfaden (Stand: Oktober 2015) adaptiert. Verwendung ohne Gewähr!
+
+\usepackage{style}		%alle packages und Formatvorlagen befinden sich in dieser Datei
+\usepackage{hyperref}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%	%%%
+% ORGANISATORISCHES
+
+\begin{document}
+\include{01Titelblatt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%VERZEICHNISSE
+
+\pagenumbering{roman}
+\thispagestyle{plain}
+\pagestyle{plain}
+
+\tableofcontents
+%\protect \addcontentsline{toc}{chapter}{Table of Contents}
+
+%\renewcommand{\nomname}{List of Abbreviations}
+%\include{05Abkuerzungsverzeichnis}
+
+%\listoffigures
+%\protect \addcontentsline{toc}{chapter}{List of Figures}
+
+%\listoftables
+%\protect \addcontentsline{toc}{chapter}{List of Tables}
+
+%\lstlistoflistings
+%\protect \addcontentsline{toc}{chapter}{Listingverzeichnis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%INHALT
+
+%\clearpage
+%\pagenumbering{arabic}
+%\include{11Samples}
+
+\clearpage
+\pagenumbering{arabic}
+
+\renewcommand{\nomname}{Abkürzungsverzeichnis}
+\include{05Abkuerzungsverzeichnis}
+
+\include{15Content}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LITERATURVERZEICHNIS
+
+%\interlinepenalty=10000 % Literatureinträge: Absätze zusammenhalten
+%\clearpage
+%\addcontentsline{toc}{chapter}{Literatur}
+%\singlespace
+%\bibliography{12bibliografie}
+%\interlinepenalty=100
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ANHÄNGE
+
+\begin{appendix}
+%\include{20Anhang}
+\end{appendix}
+
+\end{document}

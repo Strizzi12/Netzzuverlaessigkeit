@@ -1,0 +1,115 @@
+
+P1>
+P1>en
+P1#show run
+Building configuration...
+
+Current configuration : 1830 bytes
+!
+! Last configuration change at 12:20:00 UTC Tue Jun 13 2017
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname P1
+!
+boot-start-marker
+boot-end-marker
+!
+no aaa new-model
+!
+!
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+!
+license udi pid CISCO2901/K9 sn FCZ192992VJ
+license accept end user agreement
+license boot module c2900 technology-package datak9
+!
+redundancy
+!
+lldp run
+!
+!
+interface Loopback0
+ ip address 111.111.111.111 255.255.255.255
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ ip address 10.0.0.1 255.255.255.252
+ duplex auto
+ speed auto
+ mpls ip
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ ip address 172.16.0.2 255.255.255.252
+ mpls ip
+ clock rate 2000000
+!
+interface Serial0/0/1
+ ip address 172.16.0.6 255.255.255.252
+ mpls ip
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ clock rate 2000000
+!
+interface Serial0/1/1
+ ip address 172.16.0.10 255.255.255.252
+ mpls ip
+ clock rate 2000000
+!
+interface Serial0/2/0
+ no ip address
+ mpls ip
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ mpls ip
+ clock rate 2000000
+!
+!
+router ospf 1
+ network 10.0.0.0 0.0.0.3 area 0
+ network 111.111.111.111 0.0.0.0 area 0
+ network 172.16.0.0 0.0.0.3 area 0
+ network 172.16.0.4 0.0.0.3 area 0
+ network 172.16.0.8 0.0.0.3 area 0
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+control-plane
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input none
+!
+scheduler allocate 20000 1000
+!
+end
+
