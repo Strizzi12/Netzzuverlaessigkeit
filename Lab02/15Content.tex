@@ -2,40 +2,82 @@
 \thispagestyle{standard}
 \pagestyle{standard}
 \chapter{Ausgangslage}
+\label{ausgangs}
 
-Im Auftrag einer Firma, die vor kurzer Zeit durch einen Netzwerkausfall erheblichen Schaden erlitten hat, soll das Firmennetzwerk ausfallsicherer gemacht werden. Eine Bedingung ist, dass keine neue Hardware angeschafft werden soll. Abbildung \ref{img:Ausgangslage} zeigt den derzeitigen Netzwerkaufbau.
+Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafür werden die Tools Cacti und Check\_MK verwendet, die auf einer Ubuntu VM installiert werden. Die Router und Switches sollen mittels \ac{SNMP} überwacht werden. Die Server werden mittels des Check\_MK-Agents überwacht.
+
+\chapter{Topologie und IP-Adressen}
+\label{topo}
+
+TODO: Kurz reinschreiben was welche IP hat. evtl kurze topografik
+
+
+\chapter{Switch und Routerkonfiguration}
+
+Auf den Routern und Switches wurde \ac{SNMP} konfiguriert. Der Zugriff sollte auf read-only eingestellt werden. Die Community wurde entsprechend dem zugewiesenen Städtenamen konfiguriert, in diesem Fall "innsbruck".
+
+\section{Switch}
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={SNMP-Config Switch},label={lst:switch},language={}]
+snmp-server community innsbruck RO
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps transceiver all
+snmp-server enable traps call-home message-send-fail server-fail
+snmp-server host 192.168.5.4 version 2c innsbruck
+\end{lstlisting}
+
+Die Traps werden an den Check\_MK server übertragen.
+
+
+\section{Router}
+
+Beim Router wurde \ac{SNMP} mitsamt allen Traps aktiviert.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={SNMP-Config Router},label={lst:router},language={}]
+snmp-server community innsbruck RO
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps vrrp
+snmp-server enable traps transceiver all
+...
+snmp-server host 192.168.5.4 version 2c innsbruck
+\end{lstlisting}
+
+Die Konfiguration ist ähnlich wie schon beim Switch, auch hier werden die Traps an den gleichen Server übertragen.
+
+
+
+\chapter{Cacti}
+\label{cacti}
+
+Auf dem Ubuntu-Server (IP: 192.168.5.5) wurde Cacti installiert. Die Installation gestaltet sich sehr einfach, da bereits ein Paket vorliegt. 
+So genügte \texttt{apt-get install cacti} um Cacti zu installieren.
+
+Im Webinterface wurden anschließend die beiden Netzwerkkomponenten hinzugefügt. Cacti wertet dann die \ac{SNMP}-Werte aus und kann sie grafisch darstellen.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\textwidth]{img/Ausgangslage.JPG}
-	\caption{Ausgangslage Netzwerktopologie}
-	\label{img:Ausgangslage}
+	\includegraphics[width=0.9\textwidth]{img/andi_youtube.PNG}
+	\caption{Netzwerkauslastung am Switch}
+	\label{img:yt}
 \end{figure}
 
-\chapter{Netzwerkplanung}
-
-Das zu planende Netzwerk soll im Hinblick auf Netzzuverlässigkeit optimiert werden. Dazu fordert der Kunde eine redundante Internetanbindung. Diese wird mit einer seriellen Verbindung zu \ac{ISP} 1, durch Punkt 1 in Abbildung \ref{img:Netzwerkplanung} dargestellt, erreicht. 
+In Abbildung \ref{img:yt} sieht man die Auslastung an Port 5 des Switches kurz nachdem ein Video gestreamt wurde. 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\textwidth]{img/Planung_neu.JPG}
-	\caption{Planung des ausfallsicheren Netzwerks}
-	\label{img:Netzwerkplanung}
+	\includegraphics[width=0.9\textwidth]{img/cacti_graph_s00.PNG}
+	\caption{Netzwerkauslastung am Router}
+	\label{img:uplink}
 \end{figure}
 
-Durch die in Punkt 2 ergänzten Verbindungen wird eine Ausfallsicherheit für Router 1 und Router 2 erzeugt. Es wird dadurch möglich, dass im Falle eines Ausfalls von Router 1 denoch Verbindungen von \ac{VLAN} 10 in \ac{VLAN} 30 aufgebaut werden können.
+Auch der serielle Uplink am Router kann grafisch dargestellt werden, wie in Abbildung \ref{img:uplink} zu sehen ist.
 
-Punkt 3 in Abbildung \ref{img:Netzwerkplanung} zeigt die Implementierung von EtherChannel. Werden in nächster Zeit weitere \ac{VLAN}s an verschiedene Router gehängt, so entsteht durch EtherChannel eine Bandbreitenerhöhung bzw. Load-Balancing zwischen z.B. \ac{VLAN} 10 an Switch 1 und Switch 2. Des weiteren hat EtherChannel einen sogenannten "Fail-Over Mode". Die EtherChannel Technologie verteilt die Last automatisch auf die verbleibenden Links.
+\chapter{Check\_MK}
+\label{checkmk}
 
-\textbf{\ac{VLAN} \ac{IP} Adressen Bereich:} 
 
-\begin{itemize}  
-\item VLAN 10: 192.168.5.0/24
-\item VLAN 20: 192.168.15.0/24
-\item VLAN 30: 192.168.25.0/24
-\end{itemize}
-
-\chapter{Konfiguration des Netzwerks}
 
 \section{Switches}
 
