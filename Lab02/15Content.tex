@@ -170,6 +170,10 @@ Anschließend können in der Event Console vom Check\_MK Server die \ac{SNMP}-Tr
 
 Des weiteren können verschiedene Stati des Routers angezeigt werden (siehe Bild \ref{img:router_monitoring}). Darunter z.B. Temperatur der CPU, den benutzten RAM sowie die angeschlossenen Interfaces.
 
+Dass die Traps angezeigt werden, wurde die Anleitung der Seite \href{https://mathias-kettner.de/checkmk_mkeventd_traps.html}{"Processing SNMP Traps"}  mit Punkt \texttt{1.2 Enabling the Integrated SNMP Trap Server (OMD)}: 
+
+\texttt{If you are using OMD, it is very easy to enable the integrated SNMP trap server. Simply execute omd config as site user, browse into the category Addons and enable the option MKEVENTD\_SNMPTRAP. Then close the configuration dialog and start your OMD site. This should start your mkeventd with the included SNMP trap server which should now simply process the incoming traps as events.}
+
 Diese Traps können wie folgt an den Routern und Switches aktiviert werden:
 \begin{lstlisting}[caption={Traps aktivieren},label={lst:traps},language={}]
  snmp-server enable traps
