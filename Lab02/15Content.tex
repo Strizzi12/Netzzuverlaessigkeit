@@ -11,6 +11,24 @@ Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafü
 
 TODO: Kurz reinschreiben was welche IP hat. evtl kurze topografik
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/Topologie.JPG}
+	\caption{Topologie des Netzwerks (aus Moodle)}
+	\label{img:topologie}
+\end{figure}
+
+\begin{itemize}
+\item IP Adresse: 192.168.5.15 
+\item Subnetzmaske: 255.255.255.0
+\item Gateway: 192.168.5.1
+\item DNS-Server: 193.170.110.64
+\item Mit Putty kann per SSH auf den Check\_MK Server (Ubuntu 16.04 LTS 64 Bit) mit der IP 192.168.5.4 zugegriffen werden.
+\begin{itemize}
+\item Username: nzv
+\item Passwort: nzvlab
+\end{itemize}
+\end{itemize}
 
 \chapter{Switch und Routerkonfiguration}
 
@@ -18,12 +36,14 @@ Auf den Routern und Switches wurde \ac{SNMP} konfiguriert. Der Zugriff sollte au
 
 \section{Switch}
 
-\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
 \begin{lstlisting}[caption={SNMP-Config Switch},label={lst:switch},language={}]
 snmp-server community innsbruck RO
-snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps snmp authentication linkdown 
+  linkup coldstart warmstart
 snmp-server enable traps transceiver all
-snmp-server enable traps call-home message-send-fail server-fail
+snmp-server enable traps call-home message-send-fail 
+  server-fail
 snmp-server host 192.168.5.4 version 2c innsbruck
 \end{lstlisting}
 
@@ -34,10 +54,11 @@ Die Traps werden an den Check\_MK server übertragen.
 
 Beim Router wurde \ac{SNMP} mitsamt allen Traps aktiviert.
 
-\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
 \begin{lstlisting}[caption={SNMP-Config Router},label={lst:router},language={}]
 snmp-server community innsbruck RO
-snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps snmp authentication linkdown 
+  linkup coldstart warmstart
 snmp-server enable traps vrrp
 snmp-server enable traps transceiver all
 ...
@@ -77,13 +98,11 @@ Auch der serielle Uplink am Router kann grafisch dargestellt werden, wie in Abbi
 \chapter{Check\_MK}
 \label{checkmk}
 
-
-
 \section{Switches}
 
 Um nun die EtherChannel Technologie zu realisieren wurden die Ports "FastEthernet 23 und 24" verwendet. Diese werden als sogenannte "Trunk Links" konfiguriert.
 
-\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
 \begin{lstlisting}[caption={Setting EtherChannel on a switch},label={lst:etherchannel},language={}]
 interface FastEthernet0/24
  switchport trunk allowed vlan 10,20,30
@@ -94,7 +113,7 @@ interface FastEthernet0/24
 
 Des weiteren wurden die verschiedenen \ac{VLAN}s, die auf den jeweiligen Switches hängen, eingestellt.
 
-\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
 \begin{lstlisting}[caption={VLAN Konfiguration auf Switch 1},label={lst:vlan},language={}]
 interface Vlan10
  ip address 192.168.5.254 255.255.255.0
@@ -108,14 +127,47 @@ interface Vlan20
 
 Als internes Routing Protokoll wurde \ac{OSPF} verwendet. Um \ac{OSPF} richtig zu konfigurieren muss jedem Router eine eindeutige "router-id" zugewiesen werden, sowie alle bekannten Netze in der entsprechenden Area eingetragen werden.
 
-\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
 \begin{lstlisting}[caption={OSPF Konfiguration auf Router 1},label={lst:ospf},language={}]
 router ospf 10
  router-id 1.1.1.1
  network 10.10.10.0 0.0.0.255 area 0
  network 172.16.5.0 0.0.0.3 area 0
  network 192.168.5.0 0.0.0.255 area 0
- network 192.168.15.0 0.0.0.255 area 0
-
-
+ network 192.168.15.0 0.0.0.255 area 0 
 \end{lstlisting}
+
+\section{Server}
+
+Nach dem hinzufügen der einzelnen Hardware sowie dem Eintragen der Community Names der anderen Gruppen, konnte eine schöne Übersicht über alle zu überwachenden Geräte angezeigt werden (siehe Image \ref{img:uebersicht}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=1]{img/hostgroups.PNG}
+	\caption{Übersicht aller gemonitorten Geräte}
+	\label{img:uebersicht}
+\end{figure}
+
+Zum Anzeigen der vom Router bzw. Switch gesendeten \ac{SNMP}-Traps musste zuvor ein "Ruleset" definiert werden. 
+
+RULESET?
+
+Anschließend können in der Event Console vom Check\_MK Server die \ac{SNMP}-Traps angezeigt werden, wie Bild \ref{img:console} zeigt. Hier zu sehen ist das "down" gehen des FastEthernet Interfaces  05 vom Switch.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.59]{img/EventConsole_cut.PNG}
+	\caption{SNMP-Traps vom Router}
+	\label{img:console}
+\end{figure}
+
+Des weiteren können verschiedene Stati des Routers angezeigt werden (Bild \ref{img:router_monitoring}). Darunter z.B. Temperatur der CPU, den benutzten RAM sowie die angeschlossenen Interfaces.
+
+EINSTELLEN DER STATI?
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.59]{img/checkmk_router.PNG}
+	\caption{Stati vom Router}
+	\label{img:router_monitoring}
+\end{figure}
