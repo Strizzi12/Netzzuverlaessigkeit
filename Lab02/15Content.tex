@@ -4,12 +4,19 @@
 \chapter{Ausgangslage}
 \label{ausgangs}
 
-Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafür werden die Tools Cacti und Check\_MK verwendet, die auf einer Ubuntu VM installiert werden. Die Router und Switches sollen mittels \ac{SNMP} überwacht werden. Die Server werden mittels des Check\_MK-Agents überwacht.
+Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafür werden die Tools Cacti und Check\_MK verwendet, die auf einer Ubuntu \ac{VM} installiert werden. Die Router und Switches sollen mittels \ac{SNMP} überwacht werden. Die Server werden mittels des Check\_MK-Agents überwacht.
 
 \chapter{Topologie und IP-Adressen}
 \label{topo}
 
-TODO: Kurz reinschreiben was welche IP hat. evtl kurze topografik
+
+Wie in Abbildung \ref{img:topologie} zu erkennen, wurden für jede Gruppe ein Router mit Switch und den dazugehörigen Servern(\ac{VM}s) in Betrieb genommen.
+
+Unsere Gruppe hatte die Aufgabe den Standort Innsbruck zu betreuen. Dass hei{\ss}t, es wurde das Subnetz mit den \ac{IP} Adressen und dem Gruppenkürzel 5 ausgewählt (z.B. 172.16.5.0/30).
+
+
+Auf den beiden zur Verfügung gestellten \ac{VM}s, lief jeweils eine Ubuntu 16.04 LTS 64 Bit Version. Für \textbf{Cacti} (siehe Kapitel \ref{cacti}) und \textbf{Check\_MK} (siehe Kapitel \ref{checkmk}) wurden getrennte \ac{VM} verwendet. Näheres dazu in den folgenden Kapiteln.
+
 
 \begin{figure}[H]
 	\centering
