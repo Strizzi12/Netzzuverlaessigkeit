@@ -168,9 +168,14 @@ Anschließend können in der Event Console vom Check\_MK Server die \ac{SNMP}-Tr
 	\label{img:console}
 \end{figure}
 
-Des weiteren können verschiedene Stati des Routers angezeigt werden (Bild \ref{img:router_monitoring}). Darunter z.B. Temperatur der CPU, den benutzten RAM sowie die angeschlossenen Interfaces.
+Des weiteren können verschiedene Stati des Routers angezeigt werden (siehe Bild \ref{img:router_monitoring}). Darunter z.B. Temperatur der CPU, den benutzten RAM sowie die angeschlossenen Interfaces.
 
-EINSTELLEN DER STATI?
+Diese Traps können wie folgt an den Routern und Switches aktiviert werden:
+\begin{lstlisting}[caption={Traps aktivieren},label={lst:traps},language={}]
+ snmp-server enable traps
+\end{lstlisting}
+
+Es können die Traps auch genau definiert werden, um nur die gewünschten Parameter anzeigen zu können. Mit dem oben gelisteten Befehl, werden jedoch alle verfügbaren Parameter übermittelt.
 
 \begin{figure}[H]
 	\centering

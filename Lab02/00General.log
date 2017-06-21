@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.6.6)  21 JUN 2017 15:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6350 64-bit) (preloaded format=pdflatex 2017.6.6)  21 JUN 2017 15:49
 entering extended mode
 **./00General.tex
 (00General.tex
@@ -1196,41 +1196,41 @@ although it is yet undefined on input line 7.
 Chapter 2.
 Package acronym Info: Label `acro:IP' newly defined as it shall be overridden
 although it is yet undefined on input line 15.
-<img/Topologie.JPG, id=96, 851.43094pt x 575.90157pt>
+<img/Topologie.JPG, id=97, 851.43094pt x 575.90157pt>
 File: img/Topologie.JPG Graphic file (type jpg)
  <use img/Topologie.JPG>
-Package pdftex.def Info: img/Topologie.JPG used on input line 25.
+Package pdftex.def Info: img/Topologie.JPG used on input line 23.
 (pdftex.def)             Requested size: 396.91324pt x 268.4681pt.
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 31.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 29.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\lm\omslmr.fd"
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 31.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 29.
  [3
 
  <./img/Topologie.JPG>] [4]
 Chapter 3.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 49.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 47.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\t1pcr.fd"
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 ) [5
 
 ]
 Chapter 4.
-<img/andi_youtube.PNG, id=135, 456.20438pt x 163.3603pt>
+<img/andi_youtube.PNG, id=136, 456.20438pt x 163.3603pt>
 File: img/andi_youtube.PNG Graphic file (type png)
 
 <use img/andi_youtube.PNG>
-Package pdftex.def Info: img/andi_youtube.PNG used on input line 91.
+Package pdftex.def Info: img/andi_youtube.PNG used on input line 89.
 (pdftex.def)             Requested size: 396.91324pt x 142.13228pt.
 
-<img/cacti_graph_s00.PNG, id=138, 449.42906pt x 158.09062pt>
+<img/cacti_graph_s00.PNG, id=139, 449.42906pt x 158.09062pt>
 File: img/cacti_graph_s00.PNG Graphic file (type png)
 
 <use img/cacti_graph_s00.PNG>
-Package pdftex.def Info: img/cacti_graph_s00.PNG used on input line 100.
+Package pdftex.def Info: img/cacti_graph_s00.PNG used on input line 98.
 (pdftex.def)             Requested size: 396.91324pt x 139.62433pt.
  [6
 
@@ -1238,31 +1238,31 @@ Package pdftex.def Info: img/cacti_graph_s00.PNG used on input line 100.
 Chapter 5.
 Package acronym Info: Label `acro:VLAN' newly defined as it shall be overridden
 
-although it is yet undefined on input line 123.
+although it is yet undefined on input line 121.
 Package acronym Info: Label `acro:OSPF' newly defined as it shall be overridden
 
-although it is yet undefined on input line 137.
+although it is yet undefined on input line 135.
 [7
 
-] <img/hostgroups.PNG, id=177, 279.29344pt x 512.66531pt>
+] <img/hostgroups.PNG, id=178, 279.29344pt x 512.66531pt>
 File: img/hostgroups.PNG Graphic file (type png)
 
 <use img/hostgroups.PNG>
-Package pdftex.def Info: img/hostgroups.PNG used on input line 155.
+Package pdftex.def Info: img/hostgroups.PNG used on input line 153.
 (pdftex.def)             Requested size: 279.29276pt x 512.66405pt.
  [8 <./img/hostgroups.PNG>]
-<img/EventConsole_cut.PNG, id=187, 742.27313pt x 195.73125pt>
+<img/EventConsole_cut.PNG, id=188, 742.27313pt x 195.73125pt>
 File: img/EventConsole_cut.PNG Graphic file (type png)
 
 <use img/EventConsole_cut.PNG>
-Package pdftex.def Info: img/EventConsole_cut.PNG used on input line 168.
+Package pdftex.def Info: img/EventConsole_cut.PNG used on input line 166.
 (pdftex.def)             Requested size: 437.93736pt x 115.48042pt.
 
-<img/checkmk_router.PNG, id=189, 683.55376pt x 496.85625pt>
+<img/checkmk_router.PNG, id=190, 683.55376pt x 496.85625pt>
 File: img/checkmk_router.PNG Graphic file (type png)
 
 <use img/checkmk_router.PNG>
-Package pdftex.def Info: img/checkmk_router.PNG used on input line 179.
+Package pdftex.def Info: img/checkmk_router.PNG used on input line 182.
 (pdftex.def)             Requested size: 403.29323pt x 293.14264pt.
 ) [9 <./img/EventConsole_cut.PNG>] [10 <./img/checkmk_router.PNG>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 86.
@@ -1273,12 +1273,16 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 86.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 86.
 Package rerunfilecheck Info: File `00General.out' has not changed.
 (rerunfilecheck)             Checksum: 77F7BF3F5BD318EF9794786F9F775F6D;590.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 15874 strings out of 493323
- 238797 string characters out of 3139067
+ 15880 strings out of 493323
+ 238880 string characters out of 3139067
  420768 words of memory out of 3000000
- 18974 multiletter control sequences out of 15000+200000
+ 18978 multiletter control sequences out of 15000+200000
  58705 words of font info for 54 fonts, out of 3000000 for 9000
  1157 hyphenation exceptions out of 8191
  49i,12n,45p,895b,1201s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1290,9 +1294,9 @@ les/MiKTeX 2.9/fonts/type1/public/lm/lmr12.pfb><C:/Program Files/MiKTeX 2.9/fon
 ts/type1/public/lm/lmr17.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm
 /lmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmsy10.pfb><C:/Pro
 gram Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb>
-Output written on 00General.pdf (12 pages, 965354 bytes).
+Output written on 00General.pdf (12 pages, 966122 bytes).
 PDF statistics:
- 247 PDF objects out of 1000 (max. 8388607)
- 76 named destinations out of 1000 (max. 500000)
+ 250 PDF objects out of 1000 (max. 8388607)
+ 78 named destinations out of 1000 (max. 500000)
  124 words of extra memory for PDF output out of 10000 (max. 10000000)
 
