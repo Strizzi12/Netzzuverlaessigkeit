@@ -4,13 +4,17 @@
 \chapter{Ausgangslage}
 \label{ausgangs}
 
-Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafür werden die Tools Cacti und Check\_MK verwendet, die auf einer Ubuntu \ac{VM} installiert werden. Die Router und Switches sollen mittels \ac{SNMP} überwacht werden. Die Server werden mittels des Check\_MK-Agents überwacht.
+Ein Netzwerkmanagement für ein kleines Netzwerk soll eingerichtet werden. Dafür werden die Tools Cacti und Check\_MK verwendet, die auf einer Ubuntu \ac{VM} installiert werden. 
+Die Router und Switches sollen mittels \ac{SNMP} überwacht werden. 
+
+Für das Monitoring der Server werden Check\_MK Agents verwendet.
+
 
 \chapter{Topologie und IP-Adressen}
 \label{topo}
 
 
-Wie in Abbildung \ref{img:topologie} zu erkennen, wurden für jede Gruppe ein Router mit Switch und den dazugehörigen Servern(\ac{VM}s) in Betrieb genommen.
+Wie in Bild \ref{img:topologie} zu erkennen, wurden für jede Gruppe ein Router mit Switch und den dazugehörigen Servern(\ac{VM}s) in Betrieb genommen.
 
 Unsere Gruppe hatte die Aufgabe den Standort Innsbruck zu betreuen. Dass hei{\ss}t, es wurde das Subnetz mit den \ac{IP} Adressen und dem Gruppenkürzel 5 ausgewählt (z.B. 172.16.5.0/30).
 
@@ -146,7 +150,7 @@ router ospf 10
 
 \section{Server}
 
-Nach dem hinzufügen der einzelnen Hardware sowie dem Eintragen der Community Names der anderen Gruppen, konnte eine schöne Übersicht über alle zu überwachenden Geräte angezeigt werden (siehe Image \ref{img:uebersicht}).
+Nach dem hinzufügen der einzelnen Hardware sowie dem Eintragen der Community Names der anderen Gruppen, konnte eine schöne Übersicht über alle zu überwachenden Geräte angezeigt werden (siehe Bild \ref{img:uebersicht}).
 
 \begin{figure}[H]
 	\centering
@@ -156,8 +160,8 @@ Nach dem hinzufügen der einzelnen Hardware sowie dem Eintragen der Community Na
 \end{figure}
 
 Zum Anzeigen der vom Router bzw. Switch gesendeten \ac{SNMP}-Traps musste zuvor ein "Ruleset" definiert werden. 
+Mit den definierten Rule kann angegeben werden, welche Nachrichten relevant für das Unternehmen/Netzwerk sind und welche Nachrichten ignoriert werden können.
 
-RULESET?
 
 Anschließend können in der Event Console vom Check\_MK Server die \ac{SNMP}-Traps angezeigt werden, wie Bild \ref{img:console} zeigt. Hier zu sehen ist das "down" gehen des FastEthernet Interfaces  05 vom Switch.
 
@@ -170,20 +174,28 @@ Anschließend können in der Event Console vom Check\_MK Server die \ac{SNMP}-Tr
 
 Des weiteren können verschiedene Stati des Routers angezeigt werden (siehe Bild \ref{img:router_monitoring}). Darunter z.B. Temperatur der CPU, den benutzten RAM sowie die angeschlossenen Interfaces.
 
-Dass die Traps angezeigt werden, wurde die Anleitung der Seite \href{https://mathias-kettner.de/checkmk_mkeventd_traps.html}{"Processing SNMP Traps"}  mit Punkt \texttt{1.2 Enabling the Integrated SNMP Trap Server (OMD)}: 
-
-\texttt{If you are using OMD, it is very easy to enable the integrated SNMP trap server. Simply execute omd config as site user, browse into the category Addons and enable the option MKEVENTD\_SNMPTRAP. Then close the configuration dialog and start your OMD site. This should start your mkeventd with the included SNMP trap server which should now simply process the incoming traps as events.}
-
 Diese Traps können wie folgt an den Routern und Switches aktiviert werden:
 \begin{lstlisting}[caption={Traps aktivieren},label={lst:traps},language={}]
  snmp-server enable traps
 \end{lstlisting}
 
-Es können die Traps auch genau definiert werden, um nur die gewünschten Parameter anzeigen zu können. Mit dem oben gelisteten Befehl, werden jedoch alle verfügbaren Parameter übermittelt.
+Die Traps können genau definiert werden, um nur die gewünschten Parameter anzuzeigen. Mit dem oben gelisteten Befehl, werden jedoch alle verfügbaren Parameter übermittelt.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.59]{img/checkmk_router.PNG}
 	\caption{Stati vom Router}
 	\label{img:router_monitoring}
+\end{figure}
+
+Ziel war es, alle anderen Gruppengeräte im Netzwerk zu überwachen. Hierfür wurden die \ac{IP} Adressen der anderen Gruppen mit den passenden SNMPv2c Credentials verwendet, um auch diese Parameter abgreifen zu können.
+
+
+Des weiteren wurde ein Inventory unserer Geräte erstellt, um mittels Check\_MK alle aktiven Interfaces monitoren zu können (siehe Bild \ref{img:inventory_interfaces}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.65]{img/inventory_interfaces.PNG}
+	\caption{Inventory Interfaces}
+	\label{img:inventory_interfaces}
 \end{figure}
