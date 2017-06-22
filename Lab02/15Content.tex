@@ -19,7 +19,7 @@ Wie in Bild \ref{img:topologie} zu erkennen, wurden für jede Gruppe ein Router 
 Unsere Gruppe hatte die Aufgabe den Standort Innsbruck zu betreuen. Dass hei{\ss}t, es wurde das Subnetz mit den \ac{IP} Adressen und dem Gruppenkürzel 5 ausgewählt (z.B. 172.16.5.0/30).
 
 
-Auf den beiden zur Verfügung gestellten \ac{VM}s, lief jeweils eine Ubuntu 16.04 LTS 64 Bit Version. Für \textbf{Cacti} (siehe Kapitel \ref{cacti}) und \textbf{Check\_MK} (siehe Kapitel \ref{checkmk}) wurden getrennte \ac{VM} verwendet. Näheres dazu in den folgenden Kapiteln.
+Auf den beiden zur Verfügung gestellten \ac{VM}s, lief jeweils Ubuntu 16.04 LTS 64 Bit. Für \textbf{Cacti} (siehe Kapitel \ref{cacti}) und \textbf{Check\_MK} (siehe Kapitel \ref{checkmk}) wurden getrennte \ac{VM} verwendet. Näheres dazu in den folgenden Kapiteln.
 
 
 \begin{figure}[H]
@@ -60,6 +60,29 @@ snmp-server host 192.168.5.4 version 2c innsbruck
 
 Die Traps werden an den Check\_MK server übertragen.
 
+Um die EtherChannel-Technologie zu realisieren wurden die Ports "FastEthernet 23 und 24" verwendet. Diese werden als sogenannte "Trunk Links" konfiguriert.
+
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
+\begin{lstlisting}[caption={Setting EtherChannel on a switch},label={lst:etherchannel},language={}]
+interface FastEthernet0/24
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+ channel-protocol lacp
+ channel-group 1 mode active
+\end{lstlisting}
+
+Des weiteren wurden die verschiedenen \ac{VLAN}s, die auf den jeweiligen Switches hängen, eingestellt.
+
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
+\begin{lstlisting}[caption={VLAN Konfiguration auf Switch 1},label={lst:vlan},language={}]
+interface Vlan10
+ ip address 192.168.5.254 255.255.255.0
+!
+interface Vlan20
+ ip address 192.168.15.254 255.255.255.0
+
+\end{lstlisting}
+
 
 \section{Router}
 
@@ -77,6 +100,20 @@ snmp-server host 192.168.5.4 version 2c innsbruck
 \end{lstlisting}
 
 Die Konfiguration ist ähnlich wie schon beim Switch, auch hier werden die Traps an den gleichen Server übertragen.
+
+
+Als internes Routing Protokoll wurde \ac{OSPF} verwendet. Um \ac{OSPF} richtig zu konfigurieren muss jedem Router eine eindeutige "router-id" zugewiesen werden, sowie alle bekannten Netze in der entsprechenden Area eingetragen werden.
+
+\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
+\begin{lstlisting}[caption={OSPF Konfiguration auf Router 1},label={lst:ospf},language={}]
+router ospf 10
+ router-id 1.1.1.1
+ network 10.10.10.0 0.0.0.255 area 0
+ network 172.16.5.0 0.0.0.3 area 0
+ network 192.168.5.0 0.0.0.255 area 0
+ network 192.168.15.0 0.0.0.255 area 0 
+\end{lstlisting}
+
 
 
 
@@ -109,44 +146,11 @@ Auch der serielle Uplink am Router kann grafisch dargestellt werden, wie in Abbi
 \chapter{Check\_MK}
 \label{checkmk}
 
-\section{Switches}
+Die Installation von Check\_MK gestaltete sich ebenfalls einfach. Auf der Website (\url{https://mathias-kettner.de/support/1.4.0p6/check-mk-raw-1.4.0p6_0.xenial_amd64.deb} war bereits ein Paket im .deb-Format vorhanden, welches mit \texttt{dpkg -i check-mk-raw-1.4.0p6\_0.xenial\_amd64.deb} installiert wurde.
 
-Um nun die EtherChannel Technologie zu realisieren wurden die Ports "FastEthernet 23 und 24" verwendet. Diese werden als sogenannte "Trunk Links" konfiguriert.
+Um Server überwachen zu können wurde der Check\_MK-Agent auf den beiden Servern installiert. Das Paket dazu ist ebenfalls auf der Website vorhanden.
 
-\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
-\begin{lstlisting}[caption={Setting EtherChannel on a switch},label={lst:etherchannel},language={}]
-interface FastEthernet0/24
- switchport trunk allowed vlan 10,20,30
- switchport mode trunk
- channel-protocol lacp
- channel-group 1 mode active
-\end{lstlisting}
-
-Des weiteren wurden die verschiedenen \ac{VLAN}s, die auf den jeweiligen Switches hängen, eingestellt.
-
-\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
-\begin{lstlisting}[caption={VLAN Konfiguration auf Switch 1},label={lst:vlan},language={}]
-interface Vlan10
- ip address 192.168.5.254 255.255.255.0
-!
-interface Vlan20
- ip address 192.168.15.254 255.255.255.0
-
-\end{lstlisting}
-
-\section{Router}
-
-Als internes Routing Protokoll wurde \ac{OSPF} verwendet. Um \ac{OSPF} richtig zu konfigurieren muss jedem Router eine eindeutige "router-id" zugewiesen werden, sowie alle bekannten Netze in der entsprechenden Area eingetragen werden.
-
-\lstset{escapeinside={\%*}{*)},numbers=left,breaklines}%oder numbers=left
-\begin{lstlisting}[caption={OSPF Konfiguration auf Router 1},label={lst:ospf},language={}]
-router ospf 10
- router-id 1.1.1.1
- network 10.10.10.0 0.0.0.255 area 0
- network 172.16.5.0 0.0.0.3 area 0
- network 192.168.5.0 0.0.0.255 area 0
- network 192.168.15.0 0.0.0.255 area 0 
-\end{lstlisting}
+Für den Empfang von SMTP-Traps musste der eingebaute SMTP-Daemon aktiviert werden. Hier wurde nach folgender Anleitung vorgegangen: \url{https://mathias-kettner.de/checkmk_mkeventd_traps.html}. Dabei wurde der Punkt "1.2" abgearbeitet, der bei uns problemlos funktionierte.
 
 \section{Server}
 
@@ -188,7 +192,7 @@ Die Traps können genau definiert werden, um nur die gewünschten Parameter anzu
 	\label{img:router_monitoring}
 \end{figure}
 
-Ziel war es, alle anderen Gruppengeräte im Netzwerk zu überwachen. Hierfür wurden die \ac{IP} Adressen der anderen Gruppen mit den passenden SNMPv2c Credentials verwendet, um auch diese Parameter abgreifen zu können.
+Ziel war es, alle anderen Gruppengeräte im Netzwerk zu überwachen. Hierfür wurden die \ac{IP} Adressen der anderen Gruppen mit den passenden SNMPv2c Credentials verwendet, um auch diese Parameter abrufen zu können.
 
 
 Des weiteren wurde ein Inventory unserer Geräte erstellt, um mittels Check\_MK alle aktiven Interfaces monitoren zu können (siehe Bild \ref{img:inventory_interfaces}).
