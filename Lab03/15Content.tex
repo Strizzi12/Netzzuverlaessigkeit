@@ -54,3 +54,21 @@ Ein Beispiel für \ac{MPLS}-Traffic ist in Abbildung \ref{img:icmp} zu sehen. Er
 \end{figure}
 
 In Abbildung \ref{img:bgp} sind \ac{BGP}-Keepalive-Nachrichten zu sehen die periodisch ausgetauscht werden, ebenfalls über den \ac{MPLS}-Tunnel.
+
+\section{Traceroutes}
+
+Mittels \texttt{traceroute} kann die Route zu einem Zielhost festgestellt werden. Führt man diesen Befehl am Router aus (Abbildung \ref{img:trace_router}), so sieht man ebenfalls den \ac{MPLS}-Tunnel, auf einem Endgerät (Abbildung \ref{img:trace_win}) ist diese Information nicht sichtbar, da die MPLS-Label am Zielgerät nicht mehr im Frame vorhanden sind.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{data/traceroute_router.PNG}
+	\caption{Traceroute-Router}
+	\label{img:trace_router}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{data/traceroute_windows2.PNG}
+	\caption{Traceroute-Windows}
+	\label{img:trace_win}
+\end{figure}
