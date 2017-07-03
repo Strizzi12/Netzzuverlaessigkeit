@@ -3,19 +3,66 @@
 \pagestyle{standard}
 \chapter{Ausgangslage}
 
-Im Auftrag einer Firma, die vor kurzer Zeit durch einen Netzwerkausfall erheblichen Schaden erlitten hat, soll das Firmennetzwerk ausfallsicherer gemacht werden. Eine Bedingung ist, dass keine neue Hardware angeschafft werden soll. Abbildung \ref{img:Ausgangslage} zeigt den derzeitigen Netzwerkaufbau.
+Ziel dieser Laboreinheit ist es ein \ac{MPLS}-VPN zu konfigurieren. Dabei soll das ein VPN zwischen den Gruppenteilnehmer aufgebaut werden. Um dies über ein Providernetz zu ermöglichen wird \ac{BGP} eingesetzt. 
+
+\chapter{Topologie}
+
+Die Topologie (nachgebaut in Packet Tracer) ist in Abbildung \ref{img:topo} zu sehen.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/Topologie.JPG}
+	\caption{Topologie}
+	\label{img:topo}
+\end{figure}
+
+Jeder Gruppe wurde ein Provider-Edge-Router (PEx) samt zwei Kunden-Routern (CEx) zugewiesen. Der Traffic der Kundenrouter sollte voneinander abgeschirmt sein, sodass auch IP-Adressbereiche mehrfach vergeben werden können, ohne dass es zu Adresskonflikten kommt.
 
 
-\chapter{Netzwerkplanung}
+Die Router P1 und P2 wurden keiner Gruppe explizit zugewiesen, ihre Konfiguration wurde gemeinsam erledigt.
 
-Das zu planende Netzwerk soll im Hinblick auf Netzzuverlässigkeit optimiert werden. Dazu fordert der Kunde eine redundante Internetanbindung. Diese wird mit einer seriellen Verbindung zu \ac{ISP} 1, durch Punkt 1 in Abbildung \ref{img:Netzwerkplanung} dargestellt, erreicht. 
+\chapter{OSPF und BGP}
 
-%\begin{figure}[H]
-%	\centering
-%	\includegraphics[width=0.9\textwidth]{img/Planung_neu.JPG}
-%	\caption{Planung des ausfallsicheren Netzwerks}
-%	\label{img:Netzwerkplanung}
-%\end{figure}
+Zwischen den Provider-Edge und dem P-Router wurde OSPF als Routingprotokoll konfiguriert, sowie \ac{MPLS} auf allen Links aktiviert.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={PE5, MPLS und OSPF-Konfiguration},label={lst:mon},language={}]
+interface Serial0/0/0
+  ..
+  mpls ip
+  ..
+  
+router ospf 1
+ network 5.5.5.5 0.0.0.0 area 0
+ network 172.16.0.4 0.0.0.3 area 0
+!
+\end{lstlisting}
+
+Alle Netze wurden in den Routing-Prozess eingetragen. Wichtig hierbei war eine Loopback-Adresse (5.5.5.5). Diese wird in einem nächsten Schritt als Quelladresse für Routing-Updates mittels \ac{BGP} verwendet.
+
+
+\section{VRF}
+
+Mittels \ac{VRF} werden die Netze der Kunden voneinander getrennt, hierfür wird ein "virtueller" Router auf PE5 eingerichtet. Das Route-Target ist dabei gleich für alle Teilnehmer des VPNs. "65000" entspricht in dem Fall einem \ac{AS}.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={VRF CE3},label={lst:mon},language={}]
+ip vrf ce3
+ rd 65000:3
+ route-target export 65000:3
+ route-target import 65000:3
+!
+\end{lstlisting}
+
+Pro Kunde existiert ein eigener Routing-Prozess, hier ebenfalls mittels \ac{OSPF} realisiert.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={OSPF für CE3},label={lst:mon},language={}]
+router ospf 2 vrf ce3
+ router-id 5.5.5.3
+ redistribute bgp 65000 subnets
+!
+\end{lstlisting}
 
 
 \chapter{Monitoring}
