@@ -35,7 +35,6 @@ interface Serial0/0/0
 router ospf 1
  network 5.5.5.5 0.0.0.0 area 0
  network 172.16.0.4 0.0.0.3 area 0
-!
 \end{lstlisting}
 
 Alle Netze wurden in den Routing-Prozess eingetragen. Wichtig hierbei war eine Loopback-Adresse (5.5.5.5). Diese wird in einem nächsten Schritt als Quelladresse für Routing-Updates mittels \ac{BGP} verwendet.
@@ -51,7 +50,6 @@ ip vrf ce3
  rd 65000:3
  route-target export 65000:3
  route-target import 65000:3
-!
 \end{lstlisting}
 
 Pro Kunde existiert ein eigener Routing-Prozess, hier ebenfalls mittels \ac{OSPF} realisiert.
@@ -61,7 +59,6 @@ Pro Kunde existiert ein eigener Routing-Prozess, hier ebenfalls mittels \ac{OSPF
 router ospf 2 vrf ce3
  router-id 5.5.5.3
  redistribute bgp 65000 subnets
-!
 \end{lstlisting}
 
 
