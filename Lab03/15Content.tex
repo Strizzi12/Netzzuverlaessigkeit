@@ -5,7 +5,7 @@
 
 Ziel dieser Laboreinheit ist es ein \ac{MPLS}-VPN zu konfigurieren. Dabei soll das ein VPN zwischen den Gruppenteilnehmer aufgebaut werden. Um dies über ein Providernetz zu ermöglichen wird \ac{BGP} eingesetzt. 
 
-\chapter{Topologie}
+\section{Topologie}
 
 Die Topologie (nachgebaut in Packet Tracer) ist in Abbildung \ref{img:topo} zu sehen.
 
@@ -99,6 +99,34 @@ router bgp 65000
  address-family ipv4 vrf ce4
   redistribute ospf 3
  exit-address-family
+\end{lstlisting}
+
+\chapter{Provider Router 1}
+
+Beim Provider Router 1 wurde jedem angeschlossenen seriellen Link eine \ac{IP}-Adresse vergeben sowie \ac{MPLS} aktiviert.
+Des weiteren wurde wieder die Loopback0 Adresse eingestellt. 
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={MPLS und Loopback0 auf P-Router},label={lst:mon8},language={}]
+interface Serial0/0/0
+ ip address 172.16.0.2 255.255.255.252
+ mpls ip
+ clock rate 2000000
+ 
+interface Loopback0
+ ip address 111.111.111.111 255.255.255.255
+\end{lstlisting}
+
+Um zwischen den beidem Provider Routern zu routen wurde \ac{OSPF} mit folgenden Netzwerken verwendet.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={OSPF Process auf P-Router},label={lst:mon7},language={}]
+router ospf 1
+ network 10.0.0.0 0.0.0.3 area 0
+ network 111.111.111.111 0.0.0.0 area 0
+ network 172.16.0.0 0.0.0.3 area 0
+ network 172.16.0.4 0.0.0.3 area 0
+ network 172.16.0.8 0.0.0.3 area 0
 \end{lstlisting}
 
 \chapter{Monitoring}
