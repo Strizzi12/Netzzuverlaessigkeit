@@ -15,49 +15,19 @@ hostname CE3
 boot-start-marker
 boot-end-marker
 !
-!
-!
 no aaa new-model
 bsd-client server url https://cloudsso.cisco.com/as/token.oauth2
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-
-
-!
-!
-!
 !
 ip cef
 no ipv6 cef
 multilink bundle-name authenticated
 !
-!
 cts logging verbose
-!
 !
 license udi pid CISCO1941/K9 sn FCZ19297124
 license boot module c1900 technology-package datak9
 !
-!
-!
 redundancy
-!
-!
-!
-!
-!
 !
 interface Embedded-Service-Engine0/0
  no ip address
@@ -108,13 +78,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
-!
-!
-!
-!
 control-plane
-!
-!
 !
 line con 0
  logging synchronous

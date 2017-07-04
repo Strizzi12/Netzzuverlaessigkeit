@@ -21,36 +21,14 @@ enable secret 5 $1$tjBu$go74Uhs3Q/iG.PbjLfHgi/
 no aaa new-model
 bsd-client server url https://cloudsso.cisco.com/as/token.oauth2
 !
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-
-
-!
-!
-!
-!
 ip cef
 no ipv6 cef
 multilink bundle-name authenticated
 !
-!
 cts logging verbose
-!
 !
 license udi pid CISCO1941/K9 sn FCZ1929712C
 license boot module c1900 technology-package datak9
-!
 !
 username admin password 0 cisco
 !
@@ -58,10 +36,6 @@ redundancy
 !
 lldp reinit 5
 lldp run
-!
-!
-!
-!
 !
 interface Embedded-Service-Engine0/0
  no ip address
@@ -112,13 +86,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
-!
-!
-!
-!
 control-plane
-!
-!
 !
 line con 0
  logging synchronous

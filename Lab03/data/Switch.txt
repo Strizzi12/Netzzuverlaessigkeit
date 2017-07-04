@@ -16,28 +16,13 @@ hostname Switch
 boot-start-marker
 boot-end-marker
 !
-!
 no aaa new-model
 system mtu routing 1500
-!
-!
-!
-!
-!
-!
-!
-!
-!
 !
 spanning-tree mode pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
-!
-!
-!
-!
-!
 !
 interface FastEthernet0/1
 !
@@ -98,10 +83,8 @@ interface Vlan1
 ip http server
 ip http secure-server
 !
-!
 line con 0
 line vty 5 15
-!
 !
 monitor session 1 source interface Fa0/1
 monitor session 1 destination interface Fa0/3 , Fa0/10

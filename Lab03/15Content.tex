@@ -16,7 +16,7 @@ Die Topologie (nachgebaut in Packet Tracer) ist in Abbildung \ref{img:topo} zu s
 	\label{img:topo}
 \end{figure}
 
-Jeder Gruppe wurde ein Provider-Edge-Router (PEx) samt zwei Kunden-Routern (CEx) zugewiesen. Der Traffic der Kundenrouter sollte voneinander abgeschirmt sein, sodass auch IP-Adressbereiche mehrfach vergeben werden können, ohne dass es zu Adresskonflikten kommt.
+Jeder Gruppe wurde ein Provider-Edge-Router (PEx) samt zwei Kunden-Routern (CEx) zugewiesen. Der Traffic der Kundenrouter sollte voneinander abgeschirmt sein, sodass auch IP-Adressbereiche mehrfach vergeben werden können, ohne dass es zu Adresskonflikten kommt.1
 
 
 Die Router P1 und P2 wurden keiner Gruppe explizit zugewiesen, ihre Konfiguration wurde gemeinsam erledigt.
@@ -26,7 +26,7 @@ Die Router P1 und P2 wurden keiner Gruppe explizit zugewiesen, ihre Konfiguratio
 Zwischen den Provider-Edge und dem P-Router wurde OSPF als Routingprotokoll konfiguriert, sowie \ac{MPLS} auf allen Links aktiviert.
 
 \lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
-\begin{lstlisting}[caption={PE5, MPLS und OSPF-Konfiguration},label={lst:mon},language={}]
+\begin{lstlisting}[caption={PE5, MPLS und OSPF-Konfiguration},label={lst:mon2},language={}]
 interface Serial0/0/0
   ..
   mpls ip
@@ -45,7 +45,7 @@ Alle Netze wurden in den Routing-Prozess eingetragen. Wichtig hierbei war eine L
 Mittels \ac{VRF} werden die Netze der Kunden voneinander getrennt, hierfür wird ein "virtueller" Router auf PE5 eingerichtet. Das Route-Target ist dabei gleich für alle Teilnehmer des VPNs. "65000" entspricht in dem Fall einem \ac{AS}.
 
 \lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
-\begin{lstlisting}[caption={VRF CE3},label={lst:mon},language={}]
+\begin{lstlisting}[caption={VRF CE3},label={lst:mon3},language={}]
 ip vrf ce3
  rd 65000:3
  route-target export 65000:3
@@ -55,12 +55,51 @@ ip vrf ce3
 Pro Kunde existiert ein eigener Routing-Prozess, hier ebenfalls mittels \ac{OSPF} realisiert.
 
 \lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
-\begin{lstlisting}[caption={OSPF für CE3},label={lst:mon},language={}]
+\begin{lstlisting}[caption={OSPF für CE3},label={lst:mon4},language={}]
 router ospf 2 vrf ce3
  router-id 5.5.5.3
  redistribute bgp 65000 subnets
 \end{lstlisting}
 
+Der selbe Schritt wurde auch für den CE4 Router durchgeführt.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={VRF und OSPF CE4},label={lst:mon5},language={}]
+ip vrf ce4
+ rd 65000:4
+ route-target export 65000:4
+ route-target import 65000:4
+ 
+router ospf 3 vrf ce4
+ router-id 5.5.5.4
+ redistribute bgp 65000 subnets
+\end{lstlisting}
+
+\section{BGP}
+
+Nach dem Erstellen der beiden \ac{VRF} Prozesse konnte der \ac{BGP} Prozess gestartet werden. Die \ac{AS}-Nummer wird dabei dem lokalen "\ac{BGP} Speaker" zugewiesen. Mittels "neighbor" wird die \ac{IP}-Adresse und die \ac{AS}-Nummer für einen \ac{BGP} Partner festgelegt. Mittels "address-family vpnv4" wird ein \ac{VPN} mit dem Nachbar 1.1.1.1 erstellt. Über "address-family ipv4 vrf ce3" wird der zugehörige \ac{OSPF} Prozess an das jeweilige gegenüberliegende \ac{VRF} verteilt.
+
+\lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
+\begin{lstlisting}[caption={BGP Process},label={lst:mon6},language={}]
+router bgp 65000
+ bgp log-neighbor-changes
+ neighbor 1.1.1.1 remote-as 65000
+ neighbor 1.1.1.1 update-source Loopback0
+ neighbor 1.1.1.1 send-community extended
+ 
+ address-family vpnv4
+  neighbor 1.1.1.1 activate
+  neighbor 1.1.1.1 send-community extended
+ exit-address-family
+ 
+ address-family ipv4 vrf ce3
+  redistribute ospf 2
+ exit-address-family
+ 
+ address-family ipv4 vrf ce4
+  redistribute ospf 3
+ exit-address-family
+\end{lstlisting}
 
 \chapter{Monitoring}
 
@@ -72,12 +111,12 @@ Dazu wurde zwischen Router P1 und P2 ein Switch dazwischengesschaltet. Auf diese
 Anschließend konnte ein angeschlossener PC den Traffic mittels Wireshark mitschneiden.
 
 \lstset{escapeinside={\%*}{*)},numbers=left}%oder numbers=left
-\begin{lstlisting}[caption={Monitoring-Ports},label={lst:mon},language={}]
+\begin{lstlisting}[caption={Monitoring-Ports},label={lst:mon7},language={}]
 monitor session 1 source interface Fa0/1
 monitor session 1 destination interface Fa0/3 , Fa0/10
 \end{lstlisting}
 
-In Listing \ref{lst:mon} sieht man die Konfiguration des Monitor-Ports. Traffic der von und an Port Fa0/1 geschickt wird, wird auch an den Ports Fa0/3 und Fa0/10 ausgegeben.
+In Listing \ref{lst:mon6} sieht man die Konfiguration des Monitor-Ports. Traffic der von und an Port Fa0/1 geschickt wird, wird auch an den Ports Fa0/3 und Fa0/10 ausgegeben.
 
 \section{Wireshark}
 
